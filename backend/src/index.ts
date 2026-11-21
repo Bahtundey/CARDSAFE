@@ -6,6 +6,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { env } from './config/env';
+import { cookieConfigSummary } from './utils/cookies';
 import { connectDatabase } from './config/database';
 import { typeDefs } from './graphql/schema';
 import { resolvers } from './graphql/resolvers';
@@ -117,6 +118,7 @@ async function start(): Promise<void> {
     console.log(
       `[server] CARDSAFE backend ready at http://localhost:${env.port}/graphql (REST upload: /api/upload)`
     );
+    console.log(`[cookies] refresh cookie config: ${cookieConfigSummary()}`);
   });
 }
 

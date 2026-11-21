@@ -18,6 +18,7 @@ function required(name: string): string {
 
 export interface Env {
   nodeEnv: string;
+  cookieSecure: boolean;
   port: number;
   corsOrigins: string[];
   mongoUri: string;
@@ -46,6 +47,10 @@ const apiSecret = get('CLOUDINARY_API_SECRET');
 
 export const env: Env = {
   nodeEnv: get('NODE_ENV', 'development'),
+  // Cookie security must not be inferred from NODE_ENV (not reliably set to
+  // 'production' on every host). Defaults to secure so production is safe out
+  // of the box; local dev sets COOKIE_SECURE=false.
+  cookieSecure: get('COOKIE_SECURE', 'true') === 'true',
   port: parseInt(get('PORT', '4000'), 10),
   corsOrigins: get('CORS_ORIGIN', 'http://localhost:3000')
     .split(',')
