@@ -7,8 +7,13 @@ const LOCAL_GRAPHQL_URL = 'http://localhost:4000/graphql';
 function resolveGraphQLUrl(): string {
   const configured = process.env.NEXT_PUBLIC_GRAPHQL_URL;
   if (configured && configured.trim()) {
-    // Strip trailing slashes so the /graphql suffix detection below is stable.
-    return configured.trim().replace(/\/+$/, '');
+    let url = configured.trim().replace(/\/+$/, '');
+    // Accept either the full endpoint (…/graphql) or the bare backend origin.
+    // The Apollo client must always target the GraphQL route, never the root.
+    if (!/\/graphql$/.test(url)) {
+      url = `${url}/graphql`;
+    }
+    return url;
   }
 
   if (process.env.NODE_ENV === 'production') {
