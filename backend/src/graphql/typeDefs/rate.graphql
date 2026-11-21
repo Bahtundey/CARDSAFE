@@ -1,0 +1,34 @@
+type TradingRate {
+  id: ID!
+  brand: GiftCardBrand!
+  country: String!
+  cardType: String!
+  cardCurrency: String!
+  currency: String!
+  rate: Float!
+  minAmount: Float!
+  maxAmount: Float!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input UpdateTradingRateInput {
+  brandId: ID!
+  country: String!
+  cardType: String!
+  cardCurrency: String
+  currency: String
+  rate: Float!
+  minAmount: Float!
+  maxAmount: Float!
+  isActive: Boolean
+}
+
+extend type Query {
+  tradingRates(brandId: ID): [TradingRate!]!
+}
+
+extend type Mutation {
+  updateTradingRate(input: UpdateTradingRateInput!): TradingRate!
+}

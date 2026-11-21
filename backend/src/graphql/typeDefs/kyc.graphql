@@ -1,0 +1,56 @@
+enum KycStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum DocumentType {
+  NATIONAL_ID
+  PASSPORT
+  DRIVERS_LICENSE
+  VOTERS_CARD
+}
+
+type KycImage {
+  url: String!
+  publicId: String!
+}
+
+type KycStatusInfo {
+  id: ID!
+  documentType: DocumentType!
+  status: KycStatus!
+  rejectionReason: String
+  reviewedAt: DateTime
+  createdAt: DateTime!
+}
+
+type KycRecord {
+  id: ID!
+  user: User!
+  documentType: DocumentType!
+  documentImage: KycImage!
+  selfieImage: KycImage
+  status: KycStatus!
+  rejectionReason: String
+  reviewedAt: DateTime
+  createdAt: DateTime!
+}
+
+input SubmitKycInput {
+  documentType: DocumentType!
+  documentImageMediaId: ID!
+  selfieImageMediaId: ID
+}
+
+extend type Query {
+  kycStatus: KycStatusInfo
+  allKyc(status: KycStatus): [KycRecord!]!
+}
+
+extend type Mutation {
+  submitKYC(input: SubmitKycInput!): KycStatusInfo!
+  approveKYC(id: ID!): KycRecord!
+  rejectKYC(id: ID!, reason: String!): KycRecord!
+}

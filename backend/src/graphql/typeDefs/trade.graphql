@@ -1,0 +1,91 @@
+enum TradeStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+type GiftCardImage {
+  url: String!
+  publicId: String!
+}
+
+type GiftCard {
+  id: ID!
+  owner: User!
+  brand: GiftCardBrand!
+  country: String!
+  cardType: String!
+  value: Float!
+  currency: String!
+  image: GiftCardImage
+  notes: String
+  codeMask: String
+  hasCode: Boolean!
+  createdAt: DateTime!
+}
+
+type Trade {
+  id: ID!
+  user: User!
+  giftCard: GiftCard!
+  brand: GiftCardBrand!
+  rate: TradingRate
+  status: TradeStatus!
+  cardValue: Float!
+  cardCurrency: String!
+  estimatedValue: Float!
+  payoutAmount: Float
+  currency: String!
+  reviewNote: String
+  reviewedBy: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TradeEstimate {
+  rate: Float!
+  currency: String!
+  cardCurrency: String!
+  cardValue: Float!
+  estimatedValue: Float!
+  minAmount: Float!
+  maxAmount: Float!
+}
+
+input SubmitTradeInput {
+  brandId: ID!
+  country: String!
+  cardType: String!
+  value: Float!
+  currency: String
+  imageMediaId: ID
+  code: String
+  notes: String
+}
+
+input TradeEstimateInput {
+  brandId: ID!
+  country: String!
+  cardType: String!
+  value: Float!
+  currency: String
+}
+
+extend type Query {
+  myTrades: [Trade!]!
+  trade(id: ID!): Trade
+  tradeEstimate(input: TradeEstimateInput!): TradeEstimate!
+  allTrades: [Trade!]!
+}
+
+extend type Mutation {
+  uploadGiftCardImage(base64Image: String!, folder: String): Media!
+  createTrade(input: SubmitTradeInput!): Trade!
+  cancelTrade(id: ID!): Trade!
+  approveTrade(id: ID!): Trade!
+  rejectTrade(id: ID!, reason: String!): Trade!
+  revealGiftCardCode(giftCardId: ID!): String
+}

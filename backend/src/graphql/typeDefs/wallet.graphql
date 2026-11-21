@@ -1,0 +1,58 @@
+enum TransactionType {
+  TRADE_CREDIT
+  WITHDRAWAL
+  REFUND
+  ADJUSTMENT
+  BONUS
+  FEE
+}
+
+enum TransactionStatus {
+  COMPLETED
+  PENDING
+  FAILED
+}
+
+type Wallet {
+  id: ID!
+  balance: Float!
+  availableBalance: Float!
+  pendingBalance: Float!
+  currency: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Transaction {
+  id: ID!
+  type: TransactionType!
+  amount: Float!
+  currency: String!
+  reference: String!
+  status: TransactionStatus!
+  description: String!
+  balanceBefore: Float!
+  balanceAfter: Float!
+  trade: Trade
+  createdAt: DateTime!
+}
+
+enum TrustTier {
+  TIER_1
+  TIER_2
+  TIER_3
+}
+
+type TrustTierInfo {
+  tier: TrustTier!
+  minWithdrawal: Float!
+  maxWithdrawalPerRequest: Float!
+  maxWithdrawalPerDay: Float!
+  maxBalance: Float!
+}
+
+extend type Query {
+  wallet: Wallet!
+  transactions(limit: Int = 20, offset: Int = 0): [Transaction!]!
+  myTrustTier: TrustTierInfo!
+}

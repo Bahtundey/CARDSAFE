@@ -1,0 +1,60 @@
+type BrandLogo {
+  url: String!
+  publicId: String!
+}
+
+type Country {
+  code: String!
+  name: String!
+}
+
+type GiftCardBrand {
+  id: ID!
+  name: String!
+  slug: String!
+  category: String!
+  supportedCountries: [Country!]!
+  logo: BrandLogo
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input BrandLogoInput {
+  url: String!
+  publicId: String!
+}
+
+input CountryInput {
+  code: String!
+  name: String!
+}
+
+input CreateGiftCardBrandInput {
+  name: String!
+  slug: String
+  category: String!
+  supportedCountries: [CountryInput!]
+  logo: BrandLogoInput
+}
+
+input UpdateGiftCardBrandInput {
+  name: String
+  slug: String
+  category: String
+  supportedCountries: [CountryInput!]
+  logo: BrandLogoInput
+}
+
+extend type Query {
+  giftCardBrands: [GiftCardBrand!]!
+  giftCardBrand(slug: String!): GiftCardBrand
+  countries: [Country!]!
+}
+
+extend type Mutation {
+  createGiftCardBrand(input: CreateGiftCardBrandInput!): GiftCardBrand!
+  updateGiftCardBrand(id: ID!, input: UpdateGiftCardBrandInput!): GiftCardBrand!
+  setGiftCardBrandActive(id: ID!, isActive: Boolean!): GiftCardBrand!
+  disableGiftCardBrand(id: ID!): GiftCardBrand!
+}

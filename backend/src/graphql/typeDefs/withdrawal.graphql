@@ -1,0 +1,43 @@
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+type Withdrawal {
+  id: ID!
+  user: User!
+  amount: Float!
+  currency: String!
+  bankName: String!
+  accountName: String!
+  accountNumber: String!
+  status: WithdrawalStatus!
+  reference: String!
+  rejectionReason: String
+  processedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input RequestWithdrawalInput {
+  amount: Float!
+  bankName: String!
+  accountName: String!
+  accountNumber: String!
+}
+
+extend type Query {
+  withdrawals: [Withdrawal!]!
+  allWithdrawals(status: WithdrawalStatus): [Withdrawal!]!
+}
+
+extend type Mutation {
+  requestWithdrawal(input: RequestWithdrawalInput!): Withdrawal!
+  cancelWithdrawal(id: ID!): Withdrawal!
+  approveWithdrawal(id: ID!): Withdrawal!
+  completeWithdrawal(id: ID!): Withdrawal!
+  rejectWithdrawal(id: ID!, reason: String!): Withdrawal!
+}

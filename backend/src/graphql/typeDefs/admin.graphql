@@ -1,0 +1,34 @@
+type AdminStats {
+  totalUsers: Int!
+  activeUsers: Int!
+  pendingTrades: Int!
+  completedTrades: Int!
+  pendingWithdrawals: Int!
+  pendingKyc: Int!
+  walletLiabilities: Float!
+  totalVolume: Float!
+}
+
+type AuditLog {
+  id: ID!
+  actorId: User
+  action: String!
+  targetId: ID
+  targetType: String
+  metadata: String
+  ip: String
+  createdAt: DateTime!
+}
+
+extend type Query {
+  adminDashboardStats: AdminStats!
+  allUsers(search: String): [User!]!
+  allTransactions(limit: Int = 50, offset: Int = 0): [Transaction!]!
+  auditLogs(limit: Int = 100): [AuditLog!]!
+}
+
+extend type Mutation {
+  suspendUser(id: ID!): User!
+  activateUser(id: ID!): User!
+  adjustWallet(userId: ID!, amount: Float!, reason: String): Wallet!
+}

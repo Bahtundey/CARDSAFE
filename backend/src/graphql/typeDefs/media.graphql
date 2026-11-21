@@ -1,0 +1,20 @@
+enum ResourceType {
+  image
+  video
+  raw
+}
+
+type Media {
+  id: ID!
+  url: String!
+  publicId: String!
+  resourceType: ResourceType!
+  width: Int
+  height: Int
+  folder: String!
+  createdAt: DateTime!
+}
+
+extend type Query {
+  media(id: ID!): Media
+}

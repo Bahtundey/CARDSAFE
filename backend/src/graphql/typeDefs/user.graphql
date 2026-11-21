@@ -1,0 +1,22 @@
+enum Role {
+  USER
+  ADMIN
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: Role!
+  isActive: Boolean!
+  isVerified: Boolean!
+  avatar: Media
+  lastLoginAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  me: User!
+  users(limit: Int = 50, offset: Int = 0): [User!]!
+}

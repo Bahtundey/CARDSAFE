@@ -1,0 +1,18 @@
+type AppNotification {
+  id: ID!
+  type: String!
+  title: String!
+  message: String!
+  read: Boolean!
+  createdAt: DateTime!
+}
+
+extend type Query {
+  notifications(limit: Int = 30): [AppNotification!]!
+  unreadNotificationsCount: Int!
+}
+
+extend type Mutation {
+  markNotificationRead(id: ID!): AppNotification!
+  markAllNotificationsRead: Boolean!
+}

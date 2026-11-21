@@ -1,0 +1,39 @@
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
+type RegisterResult {
+  success: Boolean!
+  message: String!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateProfileInput {
+  name: String
+  avatarId: ID
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+type Mutation {
+  register(input: RegisterInput!): RegisterResult!
+  login(input: LoginInput!): AuthPayload!
+  logout: Boolean!
+  refreshToken: AuthPayload!
+  updateProfile(input: UpdateProfileInput!): User!
+  changePassword(input: ChangePasswordInput!): Boolean!
+}
