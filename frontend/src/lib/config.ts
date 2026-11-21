@@ -1,5 +1,32 @@
-// The only env value exposed to the browser. Backend secrets live behind this
-// URL and are never available to Next.js client code.
-export const API_URL: string = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
-export const GRAPHQL_URL: string = `${API_URL}/graphql`;
-export const UPLOAD_URL: string = `${API_URL}/api/upload`;
+// Single source of truth for the backend origin, injected at build time via
+// NEXT_PUBLIC_GRAPHQL_URL (configured in the Vercel Production environment).
+// Backend secrets live behind this URL and are never exposed to client code.
+
+const LOCAL_GRAPHQL_URL = 'http://localhost:4000/graphql';
+
+function resolveGraphQLUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_GRAPHQL_URL;
+  if (configured && configured.trim()) {
+    // Strip trailing slashes so the /graphql suffix detection below is stable.
+    return configured.trim().replace(/\/+$/, '');
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'NEXT_PUBLIC_GRAPHQL_URL is not configured. Set it to your deployed GraphQL ' +
+        'endpoint (e.g. https://cardsafe-ojoi.onrender.com/graphql) in the Vercel ' +
+        'Production environment variables.'
+    );
+  }
+
+  // Local development only — never reached in production builds.
+  return LOCAL_GRAPHQL_URL;
+}
+
+export const GRAPHQL_URL: string = resolveGraphQLUrl();
+
+// REST endpoints (media upload at /api/upload) live on the same backend origin
+// as the GraphQL endpoint.
+const API_ORIGIN = GRAPHQL_URL.replace(/\/graphql$/, '');
+export const API_URL: string = API_ORIGIN;
+export const UPLOAD_URL: string = `${API_ORIGIN}/api/upload`;
